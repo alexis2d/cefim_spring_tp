@@ -2,7 +2,7 @@ package fr.duquenet.alexis.cefimspring.feature.database;
 
 import fr.duquenet.alexis.cefimspring.classes.Product;
 import fr.duquenet.alexis.cefimspring.classes.ProductDto;
-import fr.duquenet.alexis.cefimspring.interfaces.ProductRepository;
+import fr.duquenet.alexis.cefimspring.repositories.ProductRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.persistence.Tuple;

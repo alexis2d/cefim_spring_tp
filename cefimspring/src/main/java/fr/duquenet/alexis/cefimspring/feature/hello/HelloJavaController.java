@@ -1,4 +1,4 @@
-package fr.duquenet.alexis.cefimspring.feature;
+package fr.duquenet.alexis.cefimspring.feature.hello;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
