@@ -1,32 +1,34 @@
 package fr.duquenet.alexis.cefimspring.classes;
 
-import jakarta.persistence.Tuple;
+import jakarta.persistence.*;
 
-import java.math.BigDecimal;
-import java.util.Optional;
-
+@Entity
+@Table(name = "product")
 public class Product {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "description")
     private String description;
-    private BigDecimal price;
 
-    public Product(Tuple tuple){
-        this.id = (int) tuple.get("id");
-        this.name = (String) tuple.get("name");
-        this.description = Optional.ofNullable(tuple.get("description")).map(field -> (String) field).orElse(null);
-        this.price = BigDecimal.valueOf((Double) tuple.get("price"));
-    }
-
-    public Product(int id, String name, String description, BigDecimal price) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.price = price;
-    }
+    @Column(name = "price")
+    private double price;
 
     public String getName() {
         return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public double getPrice() {
+        return price;
     }
 }

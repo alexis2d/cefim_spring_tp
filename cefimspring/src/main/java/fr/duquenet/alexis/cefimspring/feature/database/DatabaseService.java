@@ -1,6 +1,8 @@
 package fr.duquenet.alexis.cefimspring.feature.database;
 
 import fr.duquenet.alexis.cefimspring.classes.Product;
+import fr.duquenet.alexis.cefimspring.classes.ProductDto;
+import fr.duquenet.alexis.cefimspring.interfaces.ProductRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.persistence.Tuple;
@@ -9,9 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class DatabaseService {
@@ -19,19 +19,35 @@ public class DatabaseService {
     private EntityManager entityManager;
     private Logger logger = LoggerFactory.getLogger(DatabaseService.class);
 
+    @Autowired
+    private ProductRepository productRepository;
+
     public List<String> getProductNameList() {
         Query query = entityManager.createNativeQuery("SELECT name FROM product;");
-        List<String> results = ((List<String>) query.getResultList());
-        return results;
+        return ((List<String>) query.getResultList());
     }
 
-    public List<Product> getProductList() {
-        Query query = entityManager.createNativeQuery("SELECT id,name,description,price FROM product;");
-        List<Tuple> results = ((List<Tuple>) query.getResultList());
-        List<Product> products = new ArrayList<Product>();
-        products.add((Product) results.get(0));
-        return products;
-        //return results.stream().map(tuple -> (Product) tuple.getElements()).collect(Collectors.toList());
+    public List<ProductDto> getProductList() {
+        String request = "SELECT id, name, description, price FROM product";
+        Query query = entityManager.createNativeQuery(request, Tuple.class);
+        List<Tuple> resultList = query.getResultList();
+        return resultList.stream().map(ProductDto::new).toList();
+    }
+
+    public List<Product> getListProductFromEntity(){
+        return productRepository.findAll();
+    }
+
+    public ProductDto getOneProduct(Integer id) {
+        String request = "SELECT id, name, description, price FROM product WHERE id = :id";
+        Query query = entityManager.createNativeQuery(request, Tuple.class)
+                .setParameter("id", id);
+        Tuple result = (Tuple) query.getSingleResult();
+        return new ProductDto(result);
+    }
+
+    public Product getOneProductEntity(Integer id) {
+        return productRepository.findById(id).orElse(null);
     }
 
 }
