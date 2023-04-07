@@ -50,4 +50,28 @@ public class DatabaseService {
         return productRepository.findById(id).orElse(null);
     }
 
+    public List<ProductDto> getProductByName(String name) {
+        String request = "SELECT id, name, description, price FROM product WHERE name LIKE :name";
+        Query query = entityManager.createNativeQuery(request, Tuple.class)
+                .setParameter("name", "%"+name+"%");
+        List<Tuple> resultList = (List<Tuple>) query.getResultList();
+        return resultList.stream().map(ProductDto::new).toList();
+    }
+
+    public List<Product> getProductEntityByName(String name) {
+        return productRepository.findByNameContainingIgnoreCase(name);
+    }
+
+    public List<ProductDto> getProductByCategory(String categoryName) {
+        String request = "SELECT product.id,  product.name, description, price FROM product INNER JOIN category ON category.id = product.id_category WHERE category.name LIKE :categoryName";
+        Query query = entityManager.createNativeQuery(request, Tuple.class)
+                .setParameter("categoryName", categoryName);
+        List<Tuple> resultList = (List<Tuple>) query.getResultList();
+        return resultList.stream().map(ProductDto::new).toList();
+    }
+
+    public List<Product> getProductEntityByCategoryName(String name) {
+        return productRepository.findByCategoryName(name);
+    }
+
 }

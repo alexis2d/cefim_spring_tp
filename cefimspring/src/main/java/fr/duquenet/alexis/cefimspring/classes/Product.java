@@ -11,6 +11,13 @@ public class Product {
     @Column(name = "id")
     private int id;
 
+    @Column(name = "id_category")
+    private Integer categoryId;
+
+    @ManyToOne
+    @JoinColumn(name = "id_category", updatable = false, insertable = false)
+    private Category category;
+
     @Column(name = "name")
     private String name;
 
@@ -30,5 +37,13 @@ public class Product {
 
     public double getPrice() {
         return price;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
